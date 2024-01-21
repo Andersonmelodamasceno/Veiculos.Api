@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.ConstrainedExecution;
 using Veiculos.Api.Data;
 using Veiculos.Api.Entity;
 
@@ -16,9 +17,22 @@ namespace Veiculos.Api.Controllers
             _applicationContext = applicationContext;
         }
 
+        //GET ANO
+        [HttpGet("Ano/{ano}")]
+        public async Task<ActionResult<IEnumerable<VeiculosEntity>>> GetVeiculosPorAno(int ano)
+        {
+            var veiculos = await _applicationContext.Veiculos
+                .Where(v => v.Ano == ano)
+                .ToListAsync();
 
+            if (veiculos == null || veiculos.Count == 0)
+            {
+                return NotFound($"Não foram encontrados veículos do ano {ano}.");
+            }
 
-        //GET 
+            return veiculos;
+        }
+        //GET Cores
         [HttpGet("Cor/{cor}")]
         public async Task<ActionResult<IEnumerable<VeiculosEntity>>> GetVeiculosPorCor(string cor)
         {
