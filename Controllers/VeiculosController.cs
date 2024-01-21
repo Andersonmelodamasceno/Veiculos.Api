@@ -16,6 +16,25 @@ namespace Veiculos.Api.Controllers
             _applicationContext = applicationContext;
         }
 
+
+
+        //GET 
+        [HttpGet("Cor/{cor}")]
+        public async Task<ActionResult<IEnumerable<VeiculosEntity>>> GetVeiculosPorCor(string cor)
+        {
+            var veiculos = await _applicationContext.Veiculos
+                .Where(v => v.Cor.ToUpper() == cor.ToUpper())
+                .ToListAsync();
+
+            if (veiculos == null || veiculos.Count == 0)
+            {
+                return NotFound($"Não foram encontrados veículos da cor {cor}.");
+            }
+
+            return veiculos;
+        }
+
+
         //GET
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVeiculo(int id)
@@ -78,4 +97,4 @@ namespace Veiculos.Api.Controllers
             }
         }
     }
-}        
+}
